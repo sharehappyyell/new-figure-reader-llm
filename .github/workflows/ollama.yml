@@ -1,0 +1,30 @@
+name: Ollama Python Push Workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Ollama
+        uses: ai-action/setup-ollama@v1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+      - name: Replace RSS_URL and DISCORD_WEBHOOK_URL
+        run: |-
+          sed -i "s|\"RSS_URL\"|\"${{ secrets.RSS_URL }}\"|g" config.py
+          sed -i "s|\"DISCORD_WEBHOOK_URL\"|\"${{ secrets.DISCORD_WEBHOOK_URL }}\"|g" config.py
+      - name: Run Python
+        run: |
+          ollama create figure-extractor -f ./Modelfile
+          python main.py
+      - name: Commit and push changes
+        run: |-
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "Add Ollama result" || echo "No changes to commit"
+          git push
