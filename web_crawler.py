@@ -5,9 +5,18 @@ from typing import Optional
 from config import CRAWLER_CONFIG, BROWSER_CONFIG
 
 
-async def get_content_from_url(url: str) -> Optional[str]:
+async def get_content_from_url(url: str) -> Optional[dict]:
     """
-    指定されたURLからコンテンツをクロールし、コンテンツを返す。
+    指定されたURLからコンテンツをクロールする。
     """
-    async with AsyncWebCrawler(config=BROWSER_CONFIG) as crawler:
-        return await crawler.arun(url=url, config=CRAWLER_CONFIG)
+    try:
+        async with AsyncWebCrawler(config=BROWSER_CONFIG) as crawler:
+            content = await crawler.arun(url=url, config=CRAWLER_CONFIG)
+            if content.markdown:
+                return content
+            else:
+                return None
+
+    except Exception as e:
+        print(f"エラーが発生しました: {e}")
+        return None
