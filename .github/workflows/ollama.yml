@@ -21,11 +21,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.x'
-      - name: Run Python
+      - name: Setup Library
         run: |
           ollama create figure-extractor -f ./Modelfile
           pip install -r requirements.txt
           playwright install
+      - name: Run Main Python
+        run: |
           python main.py
       - name: Commit and push changes
         run: |-

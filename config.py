@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from crawl4ai import CrawlerRunConfig
+from crawl4ai import CrawlerRunConfig, BrowserConfig
 
 # --- 設定 (環境変数がなければデフォルト値を使用) ---
 RSS_URL = os.getenv("RSS_URL", "RSS_URL")
@@ -11,7 +11,12 @@ MAX_PROMPT_LENGTH = int(os.getenv("MAX_PROMPT_LENGTH", 4096))
 
 # --- クローラー設定 ---
 CRAWLER_CONFIG = CrawlerRunConfig(
-    exclude_external_images=True  # 外部画像を除外
+    exclude_external_images=True,  # 外部画像を除外
+    verbose=False  # ログを出力しない
+)
+# --- ブラウザ設定 ---
+BROWSER_CONFIG = BrowserConfig(
+    verbose=False  # ログを出力しない
 )
 
 
