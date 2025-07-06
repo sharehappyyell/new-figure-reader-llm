@@ -2,26 +2,12 @@ from crawl4ai import AsyncWebCrawler
 from typing import Optional
 
 # 設定ファイルからクローラー設定をインポート
-from config import CRAWLER_CONFIG
+from config import CRAWLER_CONFIG, BROWSER_CONFIG
 
 
 async def get_content_from_url(url: str) -> Optional[str]:
     """
-    指定されたURLからコンテンツをクロールし、Markdown形式で返す。
+    指定されたURLからコンテンツをクロールし、コンテンツを返す。
     """
-    print(f"🔄 URLからコンテンツを取得しています: {url}")
-    try:
-        async with AsyncWebCrawler() as crawler:
-            result = await crawler.arun(url=url, config=CRAWLER_CONFIG)
-            content = result.markdown
-
-            if not content:
-                print("❌ コンテンツの取得に失敗しました。")
-                return None
-
-            print("✅ コンテンツの取得完了。")
-            return content
-
-    except Exception as e:
-        print(f"エラーが発生しました: {e}")
-        return None
+    async with AsyncWebCrawler(config=BROWSER_CONFIG) as crawler:
+        return await crawler.arun(url=url, config=CRAWLER_CONFIG)
