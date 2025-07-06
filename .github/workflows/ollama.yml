@@ -1,8 +1,7 @@
 name: Ollama Python Push Workflow
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 * * * *' # 毎時実行
   workflow_dispatch:
 env:
   RSS_URL: ${{secrets.RSS_URL}}
