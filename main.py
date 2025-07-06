@@ -16,19 +16,26 @@ async def process_link(url: str):
     # URLからコンテンツを取得
     content = await get_content_from_url(url)
 
-    if content:
-        # Ollamaに渡すプロンプトを作成（長すぎる場合は切り詰める）
-        prompt = content[:MAX_PROMPT_LENGTH]
+    if not content:
+        return
 
-        # Ollamaで情報を抽出
-        summary_info = extract_summary_info(prompt)
+    print(f"\n🔗 処理中のURL: {content.redirected_url}")
 
-        if not summary_info:
-            return
+    # Ollamaに渡すプロンプトを作成（長すぎる場合は切り詰める）
+    prompt = content.markdown[:MAX_PROMPT_LENGTH]
 
-        # Discordに結果を送信
-        print("🔗 Discordに結果を送信中...")
-        send_to_discord(discord_payload(summary_info, url), DISCORD_WEBHOOK_URL)
+    # Ollamaで情報を抽出
+    summary_info = extract_summary_info(prompt)
+
+    if not summary_info:
+        return
+
+    # Discordに結果を送信
+    print("🔗 Discordに結果を送信中...")
+    send_to_discord(discord_payload(
+        summary_info,
+        content.redirected_url
+    ), DISCORD_WEBHOOK_URL)
 
 
 async def main():
@@ -46,7 +53,6 @@ async def main():
 
     for link in links:
         try:
-            print(f"\n🔗 処理中のリンク: {link}")
             await process_link(link)
         except Exception as e:
             print(f"予期せぬエラーが発生しました: {e}")
