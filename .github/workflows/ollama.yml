@@ -4,6 +4,9 @@ on:
     branches:
       - main
   workflow_dispatch:
+env:
+  RSS_URL: ${{secrets.RSS_URL}}
+  DISCORD_WEBHOOK_URL: ${{secrets.DISCORD_WEBHOOK_URL}}
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -14,14 +17,11 @@ jobs:
         uses: ai-action/setup-ollama@v1
       - name: Setup Python
         uses: actions/setup-python@v5
-      - name: Replace RSS_URL and DISCORD_WEBHOOK_URL
-        run: |-
-          sed -i "s|\"RSS_URL\"|\"${{ secrets.RSS_URL }}\"|g" config.py
-          sed -i "s|\"DISCORD_WEBHOOK_URL\"|\"${{ secrets.DISCORD_WEBHOOK_URL }}\"|g" config.py
       - name: Run Python
         run: |
           ollama create figure-extractor -f ./Modelfile
           pip install -r requirements.txt
+          playwright install
           python main.py
       - name: Commit and push changes
         run: |-
