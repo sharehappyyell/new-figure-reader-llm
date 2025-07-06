@@ -13,13 +13,12 @@ async def process_link(url: str):
     単一のリンクを処理する非同期関数。
     クロール -> 情報抽出 -> 結果表示 の一連の流れを実行する。
     """
+    print(f"\n🔗 処理中のURL: {url}")
     # URLからコンテンツを取得
     content = await get_content_from_url(url)
 
     if not content:
         return
-
-    print(f"\n🔗 処理中のURL: {content.redirected_url}")
 
     # Ollamaに渡すプロンプトを作成（長すぎる場合は切り詰める）
     prompt = content.markdown[:MAX_PROMPT_LENGTH]
