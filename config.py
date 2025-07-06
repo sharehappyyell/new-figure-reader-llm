@@ -12,11 +12,9 @@ MAX_PROMPT_LENGTH = int(os.getenv("MAX_PROMPT_LENGTH", 4096))
 # --- クローラー設定 ---
 CRAWLER_CONFIG = CrawlerRunConfig(
     exclude_external_images=True,  # 外部画像を除外
-    verbose=False  # ログを出力しない
 )
 # --- ブラウザ設定 ---
 BROWSER_CONFIG = BrowserConfig(
-    verbose=False  # ログを出力しない
 )
 
 
