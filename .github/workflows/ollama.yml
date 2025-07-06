@@ -24,6 +24,7 @@ jobs:
       - name: Run Python
         run: |
           ollama create figure-extractor -f ./Modelfile
+          pip install -r requirements.txt
           python3 main.py
       - name: Commit and push changes
         run: |-
